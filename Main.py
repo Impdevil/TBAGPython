@@ -1,5 +1,4 @@
-Descr = ["entrance","A room"]
-RoutDescr = ["N","E","S","W"]
+
 tilenumber = 0
 
 class Tile(object):
@@ -10,37 +9,45 @@ class Tile(object):
 	exitnum = 1
 	path= 0
 	_id = ""
-	
+	Descr = ["entrance","A room"]
+	RoutDescr = ["N","E","S","W"]
 	
 	def __init__(self, roomType, connections, Path,num):
 		global tilenumber
 		self.exits = connections
 		self.path = Path
-		self_id = num
+		self._id = num
 		if roomType == 0:
-			self.descri = Descr[roomType]
+			self.descri = self.Descr[roomType]
 			self.name = "E" + self.name + str(self._id)
 			#expansion required for this part
 		elif roomType == 1:
-			self.descri = Descr[roomType]
-			self.name = C + self.name + str(self._id)
+			self.descri = self.Descr[roomType]
+			self.name = "C" + self.name + str(self._id)
 		
 		print ("New Tile created")
 		
-	def ConnectTile(self, Prevtile, location):
-	    self.exit[location] = Prevtile
+	def ConnectTile(self, Prevtile, location, establised):
+	    
+	    if location >= 2:
+	        self.exit[max(0,min(location-2, 4))]
+	    if location < 2:
+	        self.exit[max(0,min(location+2, 4))] = Prevtile
+	    if establised != True:
+	        Prevtile.ConnectTile(self,max(0,min(location+2, 4)),True)
+	    
 	    return True
 		
 class Dungeon(object):	
 	
     entrance = object
 
-    def Traversal(self, currTile):
+    def Traversal(currTile):
         names=""
         i= 0
         if type(currTile) is Tile:
             while i < 4:
-                if type(currTile.exit) is Tile:
+                if type(currTile.exit[i]) is Tile:
                     names = names + " "+ currTile.exit[i].name + " "
                 else:
                     names = names + " NA "
@@ -72,8 +79,9 @@ class Dungeon(object):
                 print ("Potato 0.3 : new tile to generate New tile number" + str(tilenumber) + " || " + prevTile.name +" | "+ currTile.name)
                 
             if type(currTile) is Tile:    #first line
-                print ("potato0.2: adding a new tile to game. New tile number" + str(tilenumber))
+                
                 newTile = self.CreateNewTile(currTile,1)
+                print ("potato0.2: adding a new tile to game. New tile number" + str(tilenumber) +" named: " + newTile.name)
                 self.GenerateDungeon(newTile, currTile)
                 
         if tilenumber > 10:
@@ -85,6 +93,7 @@ class Dungeon(object):
             print ("Potato 0.1: start Generation")
             self.entrance = Tile(0, [None,None,None,None],0,0 )
             tilenumber = tilenumber + 1
+            print ("potato0.2: adding a new tile to game. New tile number" + str(tilenumber) +" named: " + self.entrance.name)
             self.GenerateDungeon(self.entrance,None)
             print(type(self.entrance))
             
@@ -94,10 +103,11 @@ class Dungeon(object):
     # generate a new tile to connect to the tile that came before it
     def CreateNewTile(self, connectedTile, location):
         global tilenumber
-        NewTile = Tile(0,[None,None,None,None], connectedTile.path,tilenumber)
+        NewTile = Tile(1,[None,None,None,None], connectedTile.path,tilenumber)
+        e
         tilenumber= tilenumber +1
         
-        if NewTile.ConnectTile(connectedTile, location):
+        if NewTile.ConnectTile(connectedTile, location, False):
             print("Connected")
         else:
             print("Failed")
