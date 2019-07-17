@@ -19,11 +19,11 @@ class Tile(object):
 		self_id = num
 		if roomType == 0:
 			self.descri = Descr[roomType]
-			self.name = "E" + self.name + self._id
+			self.name = "E" + self.name + str(self._id)
 			#expansion required for this part
 		elif roomType == 1:
 			self.descri = Descr[roomType]
-			self.name = C + self.name + self._id
+			self.name = C + self.name + str(self._id)
 		
 		print ("New Tile created")
 		
@@ -47,7 +47,7 @@ class Dungeon(object):
                 i = i+1 
             print("Room "+ currTile.name + ":Connections= "  + names )    
             i =0
-            while i < 5:
+            while i < 4:
                 if type(currTile.exit[i]) is Tile and type(currTile.exit[i]) is not None:
                     print("digging in to " + currTile.exit[i].name)
                     self.Traversal(currTile.exit[i])
@@ -74,6 +74,7 @@ class Dungeon(object):
             if type(currTile) is Tile:    #first line
                 print ("potato0.2: adding a new tile to game. New tile number" + str(tilenumber))
                 newTile = self.CreateNewTile(currTile,1)
+                self.GenerateDungeon(newTile, currTile)
                 
         if tilenumber > 10:
             print("Finished First Generation")
