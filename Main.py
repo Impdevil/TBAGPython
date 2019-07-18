@@ -42,7 +42,7 @@ class Dungeon(object):
 	
     entrance = object
 
-    def Traversal(self,currTile,j, Prevtile):
+    def Traversal(self,currTile,j, prevTile):
         
         names=""
         i= 0
@@ -58,14 +58,18 @@ class Dungeon(object):
                 i =0
                 while i < 4:
                     if currTile.exits[i] != None and currTile.exits[i].name != None:
-                        print("potato 4: Traversal data currtile" + str(type(currTile)) +", "+ currTile.name+ "| next tile " + str(type(currTile.exits[i])) +", "+ currTile.exits[i].name)
+                        #print("potato 4: Traversal data currtile" + str(type(currTile)) +", "+ currTile.name+ "| next tile " + str(type(currTile.exits[i])) +", "+ currTile.exits[i].name)
                         if type(currTile.exits[i]) is Tile and type(currTile.exits[i]) is not None:
-                            if prevTile is None or currTile.exits[i] != prevTile:
+                            if prevTile is None: 
+                                print("digging in to " + currTile.exits[i].name + " from " + currTile.name)
+                                j=j+1
+                                self.Traversal(currTile.exits[i], j , currTile)
+                            elif currTile.exits[i] != prevTile:
                                 print("digging in to " + currTile.exits[i].name + " from " + currTile.name)
                                 j=j+1
                                 self.Traversal(currTile.exits[i], j , currTile)
                             else:
-                                print( currTile.name + "empty @ " + i)
+                                print( currTile.name + " empty @ " + str(i))
                     i = i+1
                     if i > 5:
                         break
@@ -83,7 +87,8 @@ class Dungeon(object):
             print("Potato 0.1.9 type check: " + str(type(currTile)) + "|" + str(type(prevTile)))
             if type(prevTile) is Tile  and type(currTile) is Tile:  #for binary tree algorithim 
                 print ("Potato 0.3 : new tile to generate New tile number" + str(tilenumber) + " || " + prevTile.name +" | "+ currTile.name)
-                
+                newTile = self.CreateNewTile(currTile,3)
+                self.GenerateDungeon(newTile,currTile)
             elif type(currTile) is Tile:    #first line
                 
                 newTile = self.CreateNewTile(currTile,3)
