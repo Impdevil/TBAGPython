@@ -87,17 +87,20 @@ class Dungeon(object):
             print("Potato 0.1.9 type check: " + str(type(currTile)) + "|" + str(type(prevTile)))
             if type(prevTile) is Tile  and type(currTile) is Tile:  #for binary tree algorithim 
                 print ("Potato 0.3 : new tile to generate New tile number" + str(tilenumber) + " || " + prevTile.name +" | "+ currTile.name)
-                newTile = self.CreateNewTile(currTile,3)
+                if tilenumber == 3:
+                    newTile = self.CreateNewTile(currTile,0)
+                    print("offshoot of main line at " + str(tilenumber))
+                else:
+                        newTile = self.CreateNewTile(currTile,3)
                 self.GenerateDungeon(newTile,currTile)
-            elif type(currTile) is Tile:    #first line
                 
+            elif type(currTile) is Tile:    #first line
                 newTile = self.CreateNewTile(currTile,3)
                 print ("potato0.2: adding a new tile to game. New tile number" + str(tilenumber) +" named: " + newTile.name)
                 self.GenerateDungeon(newTile, currTile)
                 
         if tilenumber > 10:
             print("Finished First Generation")
-        
         
         #intial Creation
         if type(self.entrance) is not Tile and currTile == None:	
